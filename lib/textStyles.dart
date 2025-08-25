@@ -33,4 +33,7 @@ class TextStyles {
     fontSize: 15,
     fontWeight: FontWeight.w500,
   );
+  static const black = TextStyle(
+    color: Colors.black,
+  );
 }

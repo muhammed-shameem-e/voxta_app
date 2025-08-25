@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:voxta_app/textStyles.dart';
 
 class TextMessage extends StatelessWidget {
   const TextMessage({super.key});

@@ -4,6 +4,7 @@ class HomeProvider extends ChangeNotifier{
   int _currentIndex = 0;
   bool _isHeaderVisible = true;
   ScrollController? _scrollController;
+  
 
   int get currentIndex => _currentIndex;
   bool get isHeaderVisible => _isHeaderVisible;

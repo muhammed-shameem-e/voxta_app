@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:voxta_app/Providers/home_provider.dart';
+import 'package:voxta_app/auth/login_screen.dart';
 import 'package:voxta_app/home/home_pages.dart/call_list.dart';
 import 'package:voxta_app/home/home_pages.dart/chatlist_screen.dart';
 import 'package:voxta_app/home/home_pages.dart/group_list.dart';
+import 'package:voxta_app/home/home_pages.dart/notifications/notification_screen.dart';
 import 'package:voxta_app/home/home_pages.dart/status_list.dart';
+import 'package:voxta_app/main.dart';
 import 'package:voxta_app/textStyles.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -45,17 +49,33 @@ class HomeScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       IconButton(
-                        onPressed: (){
-                            
+                        onPressed: ()async{
+                            final prefx = await SharedPreferences.getInstance();
+                            await prefx.setBool(SAVE_KEY_VALUE, false);
+                            Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(builder: (context) => LoginScreen()), 
+                             (route) => false);
                         }, icon: Icon(Icons.settings)),
                       Text(
                         sections[homeProvider],
                         style: TextStyles.wlcmvoxta,
                       ),
-                      IconButton(
-                        onPressed: (){
-                            
-                        }, icon: Icon(Icons.more_vert)),
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: (){
+                              Navigator.of(context).push(
+                                MaterialPageRoute(builder: (context) => NotificationScreen())
+                              );
+                            }, 
+                            icon: Icon(Icons.notifications)),
+                          const SizedBox(width: 5),
+                          IconButton(
+                            onPressed: (){
+                                
+                            }, icon: Icon(Icons.more_vert)),
+                        ],
+                      ),
                     ],
                   ),
                 ),

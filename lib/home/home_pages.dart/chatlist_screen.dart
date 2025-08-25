@@ -1,15 +1,24 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:voxta_app/Providers/chat_list_provider.dart';
 import 'package:voxta_app/Providers/home_provider.dart';
 import 'package:voxta_app/home/home_pages.dart/chat_screens/chat_screen.dart';
+import 'package:voxta_app/textStyles.dart';
 
 class ChatList extends StatelessWidget {
   const ChatList({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<HomeProvider>(
-      builder: (context, homeProvider, child) {
+
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+          final chatListProvider = Provider.of<ChatListProvider>(context,listen: false);
+          chatListProvider.getAllFriends(currentUserId);
+    });
+    return Consumer2<HomeProvider,ChatListProvider>(
+      builder: (context, homeProvider, chatListProvider, child) {
         // Create a scroll controller for this page
         final scrollController = ScrollController();
         
@@ -18,10 +27,19 @@ class ChatList extends StatelessWidget {
           homeProvider.setScrollController(scrollController);
         });
 
+        if(chatListProvider.isLoading){
+          return Center(
+            child: CircularProgressIndicator(
+              color: Colors.green,
+            ),
+          );
+        }
+
         return ListView.separated(
           controller: scrollController,
-          itemCount: 50, 
+          itemCount: chatListProvider.getAllFriendsDetails.length, 
           itemBuilder: (context, index) {
+            final user = chatListProvider.getAllFriendsDetails[index];
             return ListTile(
               onTap : (){
                 Navigator.of(context).push(
@@ -36,8 +54,8 @@ class ChatList extends StatelessWidget {
                 ),
               ),
               title: Text(
-                'Chat ${index + 1}',
-                style: TextStyle(fontWeight: FontWeight.bold),
+                user.username ?? 'David',
+                style: TextStyles.blktxt,
               ),
               subtitle: Text('Last message from chat ${index + 1}'),
               trailing: Column(

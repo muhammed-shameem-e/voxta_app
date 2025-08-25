@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:voxta_app/Providers/Login_provider.dart';
+import 'package:voxta_app/Providers/search_people_provider.dart';
 import 'package:voxta_app/auth/create_acount_screen.dart';
 import 'package:voxta_app/textStyles.dart';
 
@@ -86,6 +87,8 @@ class LoginScreen extends StatelessWidget {
                         username: _usernameController.text.trim(), 
                         password: _passwordController.text.trim(), 
                         context: context);
+                      final searchProvider = Provider.of<SearchPeopleProvider>(context, listen: false);
+                      searchProvider.reset();
                     }, 
                     child: loginProvider.isLoading
                     ? CircularProgressIndicator(color: Colors.white)

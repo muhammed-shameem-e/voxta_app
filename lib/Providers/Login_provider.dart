@@ -110,13 +110,17 @@ class LoginProvider extends ChangeNotifier{
       final credential = await FirebaseAuth.instance.
       createUserWithEmailAndPassword(email: details.email!, password: details.password!);
 
+      final uid = credential.user!.uid;
+
+      final updateUser = details.copyWith(uid: uid);
+
     // await credential.user!.sendEmailVerification();
 
     
     await FirebaseFirestore.instance
     .collection('user')
     .doc(credential.user!.uid)
-    .set(details.toMap());
+    .set(updateUser.toMap());
 
     
 
